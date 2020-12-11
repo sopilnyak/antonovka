@@ -1,0 +1,22 @@
+version: "3"
+services:
+  api:
+    build:
+      context: antonovka-api
+      dockerfile: Dockerfile.api
+    ports:
+      - "5000:5000"
+  worker:
+    build:
+      context: antonovka-api
+      dockerfile: Dockerfile.worker
+  web:
+    build:
+      context: antonovka-web
+      dockerfile: Dockerfile.web
+    ports:
+      - "80:80"
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
