@@ -26,7 +26,7 @@ class se_resnext50_32x4d(nn.Module):
         super(se_resnext50_32x4d, self).__init__()
 
         self.model_ft = nn.Sequential(
-            *list(pretrainedmodels.__dict__["se_resnext50_32x4d"](num_classes=1000, pretrained=None").children())[
+            *list(pretrainedmodels.__dict__["se_resnext50_32x4d"](num_classes=1000, pretrained=None).children())[
                 :-2
             ]
         )
