@@ -1,28 +1,75 @@
 <template>
   <div>
     <div id="results">
-      <div class="button-wrapper">
-        <div class="button"><font-awesome-icon icon="plus" /></div>
-        <input type="file" id="file" ref="file" v-on:change="upload()" />
+      <div class="element">
+        <div class="button-wrapper">
+          <div class="button"><font-awesome-icon icon="plus" /></div>
+          <input type="file" id="file" ref="file" v-on:change="upload()" />
+        </div>
+        <div class="meta" style="visibility: hidden">
+          <div class="meta-element">
+            <div class="meta-header">Время:</div>
+          </div>
+          <div class="meta-element">
+            <div class="meta-header">Координаты:</div>
+            <input class="meta-input" />
+          </div>
+          <div class="meta-element">
+            <div class="meta-header">Комментарии:</div>
+            <input class="meta-input" />
+          </div>
+        </div>
       </div>
       <div
         v-for="task in tasks.slice().reverse()"
-        class="image"
-        v-tooltip="{ content: tooltip(task.result) }"
         :key="task.taskId"
-        :style="{
-          backgroundImage: 'url(' + task.imageUrl + ')',
-          borderColor: borderColor(task.result),
-          opacity: imageOpacity(task.result),
-        }"
+        class="element"
       >
-        <div class="spinner-wrapper">
-          <div
-            class="spinner"
-            :style="{
-              visibility: task.result == null ? 'visible' : 'hidden',
-            }"
-          ></div>
+        <div
+          class="image"
+          v-tooltip="{ content: tooltip(task.result) }"
+          :style="{
+            backgroundImage: 'url(' + task.imageUrl + ')',
+            borderColor: borderColor(task.result),
+            opacity: imageOpacity(task.result),
+          }"
+        >
+          <div class="spinner-wrapper">
+            <div
+              class="spinner"
+              :style="{
+                visibility: task.result == null ? 'visible' : 'hidden',
+              }"
+            ></div>
+          </div>
+        </div>
+        <div class="meta">
+          <div class="meta-element">
+            <div class="meta-header">Время:</div>
+            {{ task.datetime }}
+          </div>
+          <div class="meta-element">
+            <div class="meta-header">Координаты:</div>
+            <input
+              v-model="task.location"
+              class="meta-input"
+              :style="{
+                borderBottom:
+                  task.location == '' ? '1px solid' : '1px solid transparent',
+              }"
+            />
+          </div>
+          <div class="meta-element">
+            <div class="meta-header">Комментарии:</div>
+            <input
+              v-model="task.comment"
+              class="meta-input"
+              :style="{
+                borderBottom:
+                  task.comment == '' ? '1px solid' : '1px solid transparent',
+              }"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -35,10 +82,13 @@ import axios from "axios";
 const url = "http://77.223.104.98:5000/api";
 
 class Task {
-  constructor(taskId, imageUrl) {
+  constructor(taskId, imageUrl, datetime) {
     this.taskId = taskId;
     this.imageUrl = imageUrl;
+    this.datetime = datetime;
     this.result = null;
+    this.location = "";
+    this.comment = "";
   }
 }
 
@@ -62,7 +112,14 @@ export default {
         })
         .then((response) => {
           let imageUrl = `${url}/image/${response.data.filename}`;
-          this.tasks.push(new Task(response.data.task_id, imageUrl));
+          const today = new Date(Date.now());
+          this.tasks.push(
+            new Task(
+              response.data.task_id,
+              imageUrl,
+              this.getCurrentDate(today, "dd.mm.yyyy hh:MM")
+            )
+          );
           setTimeout(
             (taskId) => this.getTaskResult(taskId),
             1000,
@@ -89,7 +146,7 @@ export default {
       if (taskResult == "true") {
         return "#EA2027";
       }
-      return "#00c853";
+      return "#70B17F";
     },
 
     imageOpacity: function(taskResult) {
@@ -104,6 +161,26 @@ export default {
         return "Яблоня больна :(";
       }
     },
+
+    getCurrentDate: function(date, format) {
+      function pad(num, size) {
+        var s = "00" + num;
+        return s.substr(s.length - size);
+      }
+      const map = {
+        mm: date.getMonth() + 1,
+        dd: date.getDate(),
+        yy: date
+          .getFullYear()
+          .toString()
+          .slice(-2),
+        yyyy: date.getFullYear(),
+        hh: pad(date.getHours(), 2),
+        MM: pad(date.getMinutes(), 2),
+      };
+
+      return format.replace(/mm|dd|yy|hh|MM|yyy/gi, (matched) => map[matched]);
+    },
   },
 };
 </script>
@@ -117,39 +194,78 @@ export default {
 }
 
 .image {
-  display: inline-block;
-  width: 6em;
-  height: 6em;
-  margin: 0.5em;
+  width: 200px;
+  height: 200px;
   border: 5px solid;
   background-position: center center;
   background-size: cover;
-  box-shadow: 0px 0px 33px -7px #5e5e5e;
+  box-shadow: 0px 0px 33px -7px rgb(94, 94, 94, 0.5);
+}
+
+.element {
+  display: inline-block;
+  margin: 20px;
+}
+
+.meta {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #37474f;
+  text-align: left;
+  width: 210px;
+  margin-top: 10px;
+  height: 80px;
+}
+
+.meta-element {
+  display: flex;
+  align-content: flex-start;
+  margin: 5px 0;
+}
+
+.meta-header {
+  margin-right: 3px;
+  border-bottom: 1px solid transparent;
+}
+
+.meta-input {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  color: #37474f;
+  margin-top: -1px;
+  background: None;
+  border: 0;
+  border-bottom: 1px solid black;
+}
+
+.meta-input:focus {
+  background: None;
+  outline: none;
+  border: 0;
+  border-bottom: 1px solid red;
 }
 
 .button-wrapper {
-  display: inline-block;
-  width: 6em;
-  height: 6em;
-  margin: 0.5em;
+  width: 200px;
+  height: 200px;
   border: 5px rgba(150, 155, 163, 0.4) dashed;
   background-position: center center;
   background-size: cover;
   position: relative;
   overflow: hidden;
-  box-shadow: 0px 0px 33px -7px #5e5e5e;
+  box-shadow: 0px 0px 33px -7px rgb(94, 94, 94, 0.5);
 }
 
 .button {
-  background-color: #eff0f4;
   padding: 25px 20px;
   border: 0;
-  font-size: 3em;
+  font-size: 100px;
   color: rgba(150, 155, 163, 0.7);
 }
 
 .button-wrapper input[type="file"] {
-  height: 6em;
+  height: 200px;
   font-size: 100px;
   position: absolute;
   left: 0;
@@ -158,8 +274,6 @@ export default {
 }
 
 .spinner-wrapper {
-  width: 6em;
-  height: 6em;
 }
 
 .spinner {

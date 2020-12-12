@@ -25,7 +25,9 @@ export default {
 
 <style>
 body {
-  background-color: #55a26b;
+  background: #134e5e;
+  background: -webkit-linear-gradient(to left, #71b280, #134e5e);
+  background: linear-gradient(to left, #71b280, #134e5e);
   font-family: "Segoe UI", "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -45,7 +47,7 @@ body {
 }
 
 #app {
-  background-color: #eff0f4;
+  background-color: #fff;
   margin: 50px;
   min-height: 78vh;
   margin-bottom: 0;
