@@ -1,7 +1,7 @@
 import celery
 import time
 import os
-import random
+import run_inference
 
 
 app = celery.Celery()
