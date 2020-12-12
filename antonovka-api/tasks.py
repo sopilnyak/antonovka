@@ -31,4 +31,4 @@ def predict(filename):
     print('starting predict')
     time.sleep(5)
     print('ending predict')
-    return filename
+    return 'true'
