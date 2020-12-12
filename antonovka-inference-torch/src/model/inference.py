@@ -18,11 +18,11 @@ class AppleClassification:
                  device='cpu'):
         self.device = torch.device(device)
         classifier = QualityDescriptor.load_from_checkpoint(model_path)
+        classifier.model = torch.nn.Sequential(classifier.model, torch.nn.Sigmoid())
         classifier.freeze()
         self.mean = classifier.hparams['dataset']['mean']
         self.std = classifier.hparams['dataset']['std']
         self.size = classifier.hparams['dataset']['size']
-        classifier.model = torch.nn.Sequential(classifier.model, torch.nn.Sigmoid())
         if transforms:
             classifier = tta.ClassificationTTAWrapper(classifier, transforms, merge_mode='mean')
         self.classifier = classifier.to(self.device)
