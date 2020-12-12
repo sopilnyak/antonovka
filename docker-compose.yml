@@ -15,8 +15,6 @@ services:
       context: antonovka-web
       dockerfile: Dockerfile.web
     ports:
-      - "80:80"
+      - "8000:80"
   redis:
     image: "redis:alpine"
-    ports:
-      - "6379:6379"

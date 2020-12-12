@@ -32,7 +32,7 @@
 <script>
 import axios from "axios";
 
-const url = "http://localhost:5000/api";
+const url = "http://77.223.104.98:5000/api";
 
 class Task {
   constructor(taskId, imageUrl) {
