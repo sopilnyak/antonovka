@@ -23,13 +23,17 @@ class PredictTask(celery.Task):
     @property
     def model(self):
         if self.model_object is None:
-            self.model_object = 'model'
+            print('loading model')
+            self.model_object = run_inference.init_model('models/fold0.ckpt')
+            print('finish loading model')
         return self.model_object
 
 
 @app.task(base=PredictTask, name='predict')
 def predict(filename):
-    print('starting predict')
-    time.sleep(5)
-    print('ending predict')
-    return random.choice(['true', 'false'])
+    start_pred = time.time()
+    print('inference started')
+    result = run_inference.predict(predict.model, filename)
+    end_pred = time.time()
+    print('Run time:', end_pred - start_pred, 'seconds')
+    return result
