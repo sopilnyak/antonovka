@@ -8,8 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@fortawesome/vue-fontawesome": "^2.0.0",
     "axios": "^0.21.0",
     "core-js": "^2.6.12",
+    "v-tooltip": "^2.0.3",
     "vue": "^2.6.10"
   },
   "devDependencies": {

@@ -1,6 +1,7 @@
 import celery
 import time
 import os
+import random
 
 
 app = celery.Celery()
@@ -31,4 +32,4 @@ def predict(filename):
     print('starting predict')
     time.sleep(5)
     print('ending predict')
-    return 'true'
+    return random.choice(['true', 'false'])

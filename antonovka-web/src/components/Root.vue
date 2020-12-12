@@ -2,12 +2,13 @@
   <div>
     <div id="results">
       <div class="button-wrapper">
-        <button class="button">Загрузить фото</button>
+        <div class="button"><font-awesome-icon icon="plus" /></div>
         <input type="file" id="file" ref="file" v-on:change="upload()" />
       </div>
       <div
         v-for="task in tasks.slice().reverse()"
         class="image"
+        v-tooltip="{ content: tooltip(task.result) }"
         :key="task.taskId"
         :style="{
           backgroundImage: 'url(' + task.imageUrl + ')',
@@ -86,19 +87,28 @@ export default {
         return "gray";
       }
       if (taskResult == "true") {
-        return "red";
+        return "#EA2027";
       }
-      return "green";
+      return "#00c853";
     },
 
     imageOpacity: function(taskResult) {
-      return taskResult == null ? 0.3 : 1;
+      return taskResult == null ? 0.5 : 1;
+    },
+
+    tooltip: function(taskResult) {
+      if (taskResult == "false") {
+        return "Яблоня здорова!";
+      }
+      if (taskResult == "true") {
+        return "Яблоня больна :(";
+      }
     },
   },
 };
 </script>
 
-<style scoped>
+<style>
 #results {
   font-size: 2em;
   width: 70%;
@@ -110,7 +120,7 @@ export default {
   display: inline-block;
   width: 6em;
   height: 6em;
-  margin: 0.3em;
+  margin: 0.5em;
   border: 5px solid;
   background-position: center center;
   background-size: cover;
@@ -121,8 +131,8 @@ export default {
   display: inline-block;
   width: 6em;
   height: 6em;
-  margin: 0.3em;
-  border: 5px gray dashed;
+  margin: 0.5em;
+  border: 5px rgba(150, 155, 163, 0.4) dashed;
   background-position: center center;
   background-size: cover;
   position: relative;
@@ -131,11 +141,11 @@ export default {
 }
 
 .button {
-  background-color: white;
-  padding: 40% 20px;
+  background-color: #eff0f4;
+  padding: 25px 20px;
   border: 0;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 3em;
+  color: rgba(150, 155, 163, 0.7);
 }
 
 .button-wrapper input[type="file"] {
@@ -198,5 +208,111 @@ export default {
   to {
     transform: rotate(359deg);
   }
+}
+
+.tooltip {
+  display: block !important;
+  z-index: 10000;
+}
+
+.tooltip .tooltip-inner {
+  background: #576574;
+  color: white;
+  border-radius: 10px;
+  padding: 5px 10px 7px;
+}
+
+.tooltip .tooltip-arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  margin: 5px;
+  border-color: #576574;
+  z-index: 1;
+}
+
+.tooltip[x-placement^="top"] {
+  margin-bottom: 5px;
+}
+
+.tooltip[x-placement^="top"] .tooltip-arrow {
+  border-width: 5px 5px 0 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  bottom: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.tooltip[x-placement^="bottom"] {
+  margin-top: 5px;
+}
+
+.tooltip[x-placement^="bottom"] .tooltip-arrow {
+  border-width: 0 5px 5px 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  top: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.tooltip[x-placement^="right"] {
+  margin-left: 5px;
+}
+
+.tooltip[x-placement^="right"] .tooltip-arrow {
+  border-width: 5px 5px 5px 0;
+  border-left-color: transparent !important;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+  left: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.tooltip[x-placement^="left"] {
+  margin-right: 5px;
+}
+
+.tooltip[x-placement^="left"] .tooltip-arrow {
+  border-width: 5px 0 5px 5px;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  right: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.tooltip.popover .popover-inner {
+  background: #f9f9f9;
+  color: black;
+  padding: 24px;
+  border-radius: 5px;
+  box-shadow: 0 5px 30px rgba(black, 0.1);
+}
+
+.tooltip.popover .popover-arrow {
+  border-color: #f9f9f9;
+}
+
+.tooltip[aria-hidden="true"] {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s, visibility 0.15s;
+}
+
+.tooltip[aria-hidden="false"] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.15s;
 }
 </style>
