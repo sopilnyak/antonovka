@@ -59,6 +59,7 @@ class AppleClassification:
         labels = np.copy(predictions)
         labels[labels < self.th] = 0
         labels[labels > self.th] = 1
+        labels = labels.astype(int)
 
         if csv_path:
             df = pd.DataFrame({'name': ds.names,
