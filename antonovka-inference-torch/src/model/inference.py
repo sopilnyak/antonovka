@@ -39,8 +39,7 @@ class AppleClassification:
         label = 0 if pred < self.th else 1
         return label, pred
 
-    def process_folder(self, folder, csv_path=None, num_workers=8, batch_size=4):
-        image_names = os.listdir(folder)
+    def process_folder(self, folder, image_names, csv_path=None, num_workers=8, batch_size=4):
         ds = Apples(names=image_names,
                     image_dir=folder,
                     mean=self.mean,
@@ -67,4 +66,4 @@ class AppleClassification:
                                'prob': predictions})
             df.to_csv(csv_path, index=0)
 
-        return list(labels), predictions
+        return labels, predictions
