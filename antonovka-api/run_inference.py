@@ -29,8 +29,9 @@ def predict(system, filepath):
     folder = tempfile.mkdtemp()
     _, output = tempfile.mkstemp()
     copyfile(filepath, os.path.join(folder, os.path.basename(filepath)))
+    image_names = os.listdir(folder)
 
-    labels, _ = system.process_folder(folder + '/', csv_path=None, num_workers=NUM_WORKERS)
+    labels, _ = system.process_folder(folder + '/', image_names, csv_path=None, num_workers=NUM_WORKERS)
 
     hm_filename = ''
     if labels[0] == 1:
