@@ -24,17 +24,20 @@ def process_folder():
     image_names = list(os.listdir(image_folder))
     image_names.sort()
 
-    transforms = tta.Compose(
-                [
-                    tta.HorizontalFlip(),
-                ]
-            )
-    all_thrs = [0.18, 0.22, 0.22, 0.2, 0.2]
+    all_thrs = [0.53, 0.4, 0.44, 0.5, 0.65]
+    all_transforms = [
+        tta.Compose([tta.Rotate90([0, 90])]),
+        tta.Compose([tta.Scale([1, 1.25])]),
+        tta.Compose([tta.Scale([1, 0.75])]),
+        None,
+        tta.Compose([tta.Rotate90([0, 90])])
+        ]
+
     all_preds = []
     for ind in range(5):
         system = AppleClassification(model_path=f'{model_folder}fold{ind}.ckpt',
                                      device='cuda:0',
-                                     transforms=transforms,
+                                     transforms=all_transforms[ind],
                                      th=all_thrs[ind])
         labels, probs = system.process_folder(image_folder, image_names, num_workers=NUM_WORKERS)
         # float, will multiply by weights
