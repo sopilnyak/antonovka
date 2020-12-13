@@ -48,7 +48,7 @@ class AppleClassification:
         ds = Apples(names=image_names,
                     image_dir=folder,
                     mean=self.mean,
-                    std=self.mean,
+                    std=self.std,
                     size=self.size)
         loader = DataLoader(dataset=ds,
                             num_workers=num_workers,
