@@ -25,7 +25,7 @@
         :key="task.taskId"
         class="element"
       >
-        <v-popover offset="16">
+        <v-popover offset="16" :disabled="isHeatmapDisabled(task.heatmapUrl)">
           <div
             class="image tooltip-target b3"
             v-tooltip="{ content: tooltip(task.result) }"
@@ -144,7 +144,9 @@ export default {
         if (response.data.result != "") {
           let task = this.tasks.find((value) => value.taskId == taskId);
           task.result = response.data.result;
-          task.heatmapUrl = `${url}/image/${response.data.heatmap}`;
+          if (response.data.heatmap != "") {
+            task.heatmapUrl = `${url}/image/${response.data.heatmap}`;
+          }
         } else {
           setTimeout((taskId) => this.getTaskResult(taskId), 1000, taskId);
         }
@@ -192,6 +194,13 @@ export default {
       };
 
       return format.replace(/mm|dd|yy|hh|MM|yyy/gi, (matched) => map[matched]);
+    },
+
+    isHeatmapDisabled: function(heatmapUrl) {
+      if (heatmapUrl == "") {
+        return true;
+      }
+      return false;
     },
   },
 };
@@ -429,9 +438,9 @@ export default {
 
 .tooltip.popover .popover-inner {
   background: #f9f9f9;
-  border: 4px solid #6fb07f;
+  border: 4px solid #ea2027;
   color: black;
-  border-radius: 5px;
+  border-radius: 0;
   box-shadow: 0px 0px 33px -7px #1e272e;
   padding: 0 !important;
 }
