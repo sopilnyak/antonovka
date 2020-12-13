@@ -213,8 +213,8 @@ export default {
 <style>
 #results {
   font-size: 2em;
-  width: 70%;
-  min-width: 20em;
+  width: 90%;
+  min-width: 10em;
   margin: 2em auto;
 }
 

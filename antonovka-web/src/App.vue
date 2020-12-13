@@ -31,6 +31,7 @@ body {
   font-family: "Segoe UI", "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-width: 30em;
 }
 
 #header {
@@ -55,5 +56,6 @@ body {
   box-shadow: 0px 0px 33px -7px #1e272e;
   text-align: center;
   margin-top: 1.5em;
+  min-width: 30em;
 }
 </style>
