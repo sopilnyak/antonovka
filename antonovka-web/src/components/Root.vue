@@ -438,7 +438,7 @@ export default {
 
 .tooltip.popover .popover-inner {
   background: #f9f9f9;
-  border: 4px solid #ea2027;
+  border: 0;
   color: black;
   border-radius: 0;
   box-shadow: 0px 0px 33px -7px #1e272e;
