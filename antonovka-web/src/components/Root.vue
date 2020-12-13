@@ -25,7 +25,11 @@
         :key="task.taskId"
         class="element"
       >
-        <v-popover offset="16" :disabled="isHeatmapDisabled(task.heatmapUrl)">
+        <v-popover
+          offset="16"
+          :disabled="isHeatmapDisabled(task.heatmapUrl)"
+          class="heatmap-popover"
+        >
           <div
             class="image tooltip-target b3"
             v-tooltip="{ content: tooltip(task.result) }"
@@ -235,6 +239,10 @@ export default {
 .element {
   display: inline-block;
   margin: 20px;
+}
+
+.heatmap-popover {
+  height: 210px;
 }
 
 .meta {
