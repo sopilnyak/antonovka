@@ -5,6 +5,7 @@ import warnings
 import os
 from shutil import copyfile
 import tempfile
+import cv2
 
 warnings.filterwarnings("ignore")
 
@@ -30,6 +31,16 @@ def predict(system, filepath):
     copyfile(filepath, os.path.join(folder, os.path.basename(filepath)))
 
     labels, _ = system.process_folder(folder + '/', csv_path=None, num_workers=NUM_WORKERS)
+
+    hm_filename = ''
+    if labels[0] == 1:
+        image = cv2.imread(filepath)
+        system.generate_heatmap(image)
+        hm_filepath = filepath.split('.')[0] + '_hm' + filepath.split('.')[1]
+        print('wrote heatmap to {}'.format(hm_filepath))
+        cv2.imwrite(hm_filepath, image)
+        hm_filename = os.path.basename(hm_filepath)
+
     if labels[0] == 0:
-        return 'false'
-    return 'true'
+        return 'false', hm_filename
+    return 'true', hm_filename

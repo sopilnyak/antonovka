@@ -48,18 +48,20 @@ class Predict(Resource):
 class Result(Resource):
     result_model = api.model('Result', {
         'status': fields.String,
-        'result': fields.String
+        'result': fields.String,
+        'heatmap': fields.String
     })
 
     @api.response(200, 'Success', result_model)
     def get(self, task_id):
         task = AsyncResult(task_id, app=celery_app)
         if task.ready():
-            result = task.get()
+            result, hm_filename = task.get()
         else:
-            result = ''
+            result, hm_filename = '', ''
         return {'status': task.status,
-                'result': result}
+                'result': result,
+                'heatmap': hm_filename}
 
 
 @api.route('/image/<string:filename>')

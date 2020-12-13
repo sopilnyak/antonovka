@@ -28,6 +28,8 @@ class Apples(data.Dataset):
     def __getitem__(self, index):
         name = self.names[index]
         img = cv2.imread(self.image_dir + name)
+        if img is None:
+            print('can not load file', self.image_dir + name)
         img = noramilize(img, self.mean, self.std)
         img = resize(img, self.size)
         img = np.moveaxis(np.array(img), 2, 0)
