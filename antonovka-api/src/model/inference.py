@@ -9,6 +9,7 @@ from src.data.transforms import noramilize, resize
 from src.data.dataset import Apples
 from torch.utils.data import DataLoader
 from src.model.gradcam import GradCAM
+import cv2
 
 
 class AppleClassification:
@@ -90,7 +91,7 @@ class AppleClassification:
         for ind, layer in enumerate(layers):
             regions = self.gcam.generate(target_layer='model.0.model_ft.' + layer)
             mask += regions[0][0].cpu().numpy().astype('float') * (ind + 1) / 3
-        heatmap = cv2.applyColorMap(np.uint8(255 - 255 * mask), cv2.COLORMAP_JET)
+        heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)
         heatmap = np.float32(heatmap)
         heatmap = cv2.resize(heatmap, (img_original.shape[1], img_original.shape[0]), interpolation=cv2.INTER_CUBIC)
         cam = heatmap + np.float32(img_original)
