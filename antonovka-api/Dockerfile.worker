@@ -7,6 +7,6 @@ RUN apt-get update
 RUN apt-get install -y python3-pip
 RUN apt-get install -y libgl1-mesa-glx
 RUN apt-get install -y libglib2.0-0 --no-install-recommends
-RUN pip3 install --no-cache-dir -r requirements_worker.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 CMD ["celery", "--app=tasks.app", "worker", "--concurrency=1", "--loglevel=INFO", "--queues=predict", "--without-gossip"]
