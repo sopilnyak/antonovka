@@ -9,12 +9,19 @@ warnings.filterwarnings("ignore")
 
 # warning! Should ends with '/'
 IMAGE_FOLDER = 'data/train_public/'
-MODEL_PATH = './models/'
+MODEL_FOLDER = './models/'
 OUTPUT_FILE = './Antonovka_out.csv'
 NUM_WORKERS = 4
 
+def add_backslash_if_needed(folder):
+    if folder[-1] == '/':
+        return folder
+    return folder + '/'
+
 def process_folder():
-    image_names = list(os.listdir(IMAGE_FOLDER))
+    image_folder = add_backslash_if_needed(IMAGE_FOLDER)
+    model_folder = add_backslash_if_needed(MODEL_FOLDER)
+    image_names = list(os.listdir(image_folder))
     image_names.sort()
 
     transforms = tta.Compose(
@@ -25,11 +32,11 @@ def process_folder():
     all_thrs = [0.18, 0.22, 0.22, 0.2, 0.2]
     all_preds = []
     for ind in range(5):
-        system = AppleClassification(model_path=f'{MODEL_PATH}fold{ind}.ckpt',
+        system = AppleClassification(model_path=f'{model_folder}fold{ind}.ckpt',
                                      device='cuda:0',
                                      transforms=transforms,
                                      th=all_thrs[ind])
-        labels, _ = system.process_folder(IMAGE_FOLDER, image_names, num_workers=NUM_WORKERS)
+        labels, probs = system.process_folder(image_folder, image_names, num_workers=NUM_WORKERS)
         # float, will multiply by weights
         labels = np.array(labels, dtype=float)
         all_preds.append(labels)
