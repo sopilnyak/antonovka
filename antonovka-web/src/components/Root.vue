@@ -25,24 +25,34 @@
         :key="task.taskId"
         class="element"
       >
-        <div
-          class="image"
-          v-tooltip="{ content: tooltip(task.result) }"
-          :style="{
-            backgroundImage: 'url(' + task.imageUrl + ')',
-            borderColor: borderColor(task.result),
-            opacity: imageOpacity(task.result),
-          }"
-        >
-          <div class="spinner-wrapper">
+        <v-popover offset="16">
+          <div
+            class="image tooltip-target b3"
+            v-tooltip="{ content: tooltip(task.result) }"
+            :style="{
+              backgroundImage: 'url(' + task.imageUrl + ')',
+              borderColor: borderColor(task.result),
+              opacity: imageOpacity(task.result),
+            }"
+          >
+            <div class="spinner-wrapper">
+              <div
+                class="spinner"
+                :style="{
+                  visibility: task.result == null ? 'visible' : 'hidden',
+                }"
+              ></div>
+            </div>
+          </div>
+          <template slot="popover">
             <div
-              class="spinner"
+              class="image-heatmap"
               :style="{
-                visibility: task.result == null ? 'visible' : 'hidden',
+                backgroundImage: 'url(' + task.heatmapUrl + ')',
               }"
             ></div>
-          </div>
-        </div>
+          </template>
+        </v-popover>
         <div class="meta">
           <div class="meta-element">
             <div class="meta-header">Время:</div>
@@ -89,6 +99,7 @@ class Task {
     this.result = null;
     this.location = "";
     this.comment = "";
+    this.heatmapUrl = "";
   }
 }
 
@@ -133,6 +144,7 @@ export default {
         if (response.data.result != "") {
           let task = this.tasks.find((value) => value.taskId == taskId);
           task.result = response.data.result;
+          task.heatmapUrl = `${url}/image/${response.data.heatmap}`;
         } else {
           setTimeout((taskId) => this.getTaskResult(taskId), 1000, taskId);
         }
@@ -197,6 +209,15 @@ export default {
   width: 200px;
   height: 200px;
   border: 5px solid;
+  background-position: center center;
+  background-size: cover;
+  box-shadow: 0px 0px 33px -7px rgb(94, 94, 94, 0.5);
+}
+
+.image-heatmap {
+  background: #ffffff;
+  width: 300px;
+  height: 300px;
   background-position: center center;
   background-size: cover;
   box-shadow: 0px 0px 33px -7px rgb(94, 94, 94, 0.5);
@@ -408,10 +429,11 @@ export default {
 
 .tooltip.popover .popover-inner {
   background: #f9f9f9;
+  border: 4px solid #6fb07f;
   color: black;
-  padding: 24px;
   border-radius: 5px;
-  box-shadow: 0 5px 30px rgba(black, 0.1);
+  box-shadow: 0px 0px 33px -7px #1e272e;
+  padding: 0 !important;
 }
 
 .tooltip.popover .popover-arrow {
