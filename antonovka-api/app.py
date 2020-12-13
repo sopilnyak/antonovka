@@ -36,10 +36,11 @@ class Predict(Resource):
                 uuid=str(uuid.uuid4()),
                 extension=os.path.splitext(file.filename)[1]
             )
-        file.save(os.path.join(storage_folder, filename))
+        filepath = os.path.join(storage_folder, filename)
+        file.save(filepath)
 
         task = predict.apply_async(routing_key='predict',
-                                   kwargs={'filename': filename})
+                                   kwargs={'filename': filepath})
         return {'task_id': task.task_id, 'filename': filename}
 
 

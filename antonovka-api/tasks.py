@@ -30,10 +30,10 @@ class PredictTask(celery.Task):
 
 
 @app.task(base=PredictTask, name='predict')
-def predict(filename):
+def predict(filepath):
     start_pred = time.time()
     print('inference started')
-    result = run_inference.predict(predict.model, filename)
+    result = run_inference.predict(predict.model, filepath)
     end_pred = time.time()
     print('Run time:', end_pred - start_pred, 'seconds')
     return result

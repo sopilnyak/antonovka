@@ -41,6 +41,7 @@ class AppleClassification:
 
     def process_folder(self, folder, csv_path=None, num_workers=8, batch_size=4):
         image_names = os.listdir(folder)
+        print(image_names)
         ds = Apples(names=image_names,
                     image_dir=folder,
                     mean=self.mean,

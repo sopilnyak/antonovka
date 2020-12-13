@@ -8,7 +8,7 @@ import tempfile
 
 warnings.filterwarnings("ignore")
 
-NUM_WORKERS = 4
+NUM_WORKERS = 0
 
 
 def init_model(model_path):
@@ -29,7 +29,7 @@ def predict(system, filepath):
     _, output = tempfile.mkstemp()
     copyfile(filepath, os.path.join(folder, os.path.basename(filepath)))
 
-    labels, _ = system.process_folder(folder, csv_path=output, num_workers=NUM_WORKERS)
+    labels, _ = system.process_folder(folder + '/', csv_path=None, num_workers=NUM_WORKERS)
     if labels[0] == 0:
         return 'false'
     return 'true'
